@@ -21,15 +21,15 @@ DOCUMENTATION = '''
               - name: AWS_PROFILE
               - name: AWS_DEFAULT_PROFILE
         aws_access_key_id:
-          description: The AWS access key to use. If you have specified a profile, you don't need to provide
-              an access key/secret key/session token.
+          description: The AWS access key to use. If you have specified a profile or are using an EC2 IAM role, you don't need
+                       to provide an access key/secret key/session token.
           env:
               - name: AWS_ACCESS_KEY_ID
               - name: AWS_ACCESS_KEY
               - name: EC2_ACCESS_KEY
         aws_secret_access_key:
-          description: The AWS secret key that corresponds to the access key. If you have specified a profile,
-              you don't need to provide an access key/secret key/session token.
+          description: The AWS secret key to use. If you have specified a profile or are using an EC2 IAM role, you don't need
+                       to provide an access key/secret key/session token.
           env:
               - name: AWS_SECRET_ACCESS_KEY
               - name: AWS_SECRET_KEY
@@ -439,10 +439,6 @@ class InventoryModule(BaseInventoryPlugin, Constructable, Cacheable):
         self.aws_access_key_id = self._options.get('aws_access_key_id')
         self.aws_secret_access_key = self._options.get('aws_secret_access_key')
         self.aws_security_token = self._options.get('aws_security_token')
-
-        if not self.boto_profile and not (self.aws_access_key_id and self.aws_secret_access_key):
-            raise AnsibleError("Insufficient boto credentials found. Please provide them in your "
-                               "inventory configuration file or set them as environment variables.")
 
     def _validate_config(self, loader, path):
         '''
